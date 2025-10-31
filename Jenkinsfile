@@ -60,13 +60,14 @@ pipeline {
                 sh './deploy.sh'
             }
         }
-        post {
+        
+    }
+    post {
         success {
             echo "✅ Déploiement terminé avec succès !"
         }
         failure {
             echo "❌ Une erreur est survenue pendant le pipeline."
         }
-    }
     }
 }
