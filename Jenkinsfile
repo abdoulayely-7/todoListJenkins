@@ -13,13 +13,13 @@ pipeline {
     //  Stages : les étapes du pipeline
     stages {
 
-        stage('Checkout') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                    sh 'git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/abdoulayely-7/todoListJenkins.git'
-                }
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+        //             sh 'git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/abdoulayely-7/todoListJenkins.git'
+        //         }
+        //     }
+        // }
 
         stage('Install Dependencies') {
             steps {
@@ -60,5 +60,13 @@ pipeline {
                 sh './deploy.sh'
             }
         }
+        post {
+        success {
+            echo "✅ Déploiement terminé avec succès !"
+        }
+        failure {
+            echo "❌ Une erreur est survenue pendant le pipeline."
+        }
+    }
     }
 }
