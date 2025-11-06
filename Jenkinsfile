@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker' } // ton agent
+    agent { label 'docker' } // ton agent, qui a docker installé
 
     environment {
         DOCKERHUB_REPO = 'abdoulayely777/todolist'
@@ -12,17 +12,21 @@ pipeline {
             }
         }
 
-        stage('Build & Test inside Node container') {
+        stage('Node Build & Test') {
             agent {
                 docker {
                     image 'node:20-alpine'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
                 sh 'npm install'
                 sh 'npm test || echo "No tests found"'
-                sh "docker build -t $DOCKERHUB_REPO:latest ."
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t $DOCKERHUB_REPO:latest .'
             }
         }
 
