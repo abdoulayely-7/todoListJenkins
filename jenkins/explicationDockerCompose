@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk21
+    container_name: jenkins-master
+    user: root
+    ports:
+      - "8181:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # ⚙️ Accès Docker depuis Jenkins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - jenkins
+    restart: unless-stopped
+
+  agent:
+    image: jenkins/inbound-agent:latest
+    container_name: jenkins-agent-node
+    depends_on:
+      - jenkins
+    environment:
+      - JENKINS_URL=http://jenkins:8080        # ⚠️ Le master est joignable par son nom de service (pas besoin d'IP)
+      - JENKINS_AGENT_NAME=jenkins-agent-node
+      - JENKINS_SECRET=<le-token-de-ton-node>  # ⚠️ À remplacer par ton secret réel
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - jenkins
+    restart: unless-stopped
+
+networks:
+  jenkins:
+
+volumes:
+  jenkins_home:
+
+Explication ligne par ligne
+🔹 Réseau partagé
+networks:
+  jenkins:
+
+
+→ Les deux services partagent ce réseau privé jenkins, donc tu peux utiliser http://jenkins:8080 comme URL pour l’agent.
+
+🔹 Connexion agent → master
+environment:
+  - JENKINS_URL=http://jenkins:8080
+  - JENKINS_AGENT_NAME=jenkins-agent-node
+  - JENKINS_SECRET=<le-token-de-ton-node>
+
+
+Le secret vient de ton interface Jenkins :
+Manage Jenkins → Nodes → jenkins-agent-node → Configure → Secret
+
+🔹 Docker dans Docker
+
+On monte :
+
+- /var/run/docker.sock:/var/run/docker.sock
+- /usr/bin/docker:/usr/bin/docker
+
+
+→ Ça permet à l’agent d’exécuter des docker build, docker push, etc.
+(ce n’est pas du Docker-in-Docker, c’est Docker-from-Host, plus léger et plus sûr ✅)
+
+🔹 Redémarrage automatique
+restart: unless-stopped
+
+
+→ Ton agent revient automatiquement après reboot.
+
+🚀 Étapes à suivre
+
+Récupère le token du node
+Dans Jenkins UI :
+
+Manage Jenkins → Nodes → jenkins-agent-node → Configure → Secret
+
+
+Colle-le dans ton docker-compose.yml
+Ligne :
+
+- JENKINS_SECRET=<le-token-de-ton-node>
+
+
+Relance tes services
+
+docker compose up -d
+
+
+Vérifie les logs
+
+docker logs -f jenkins-agent-node
+
+
+Tu devrais voir :
+
+INFO: Connected to Jenkins controller
+
+
+→ ✅ Si oui, ton agent est prêt.
+
+🧩 Vérification finale
+
+Va dans Jenkins :
+
+Manage Jenkins → Nodes
+
+
+Tu verras :
+
+jenkins-agent-node (connected)
+
+
+🟢 En vert = parfait, ton build distribué est prêt.

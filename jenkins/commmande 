@@ -1,0 +1,31 @@
+S arrurer  que jenkins master peut utiliser docker
+docker exec -it jenkins-master bash
+docker ps
+
+
+
+Étapes de validation
+
+Stoppe les anciens conteneurs (si existants)
+
+docker compose down
+
+
+Redémarre proprement
+
+docker compose up -d
+
+
+Vérifie les logs
+
+docker logs -f jenkins-agent-node
+
+
+Si tout est bon, tu verras :
+
+INFO: Connected to Jenkins controller
+INFO: Agent successfully connected and online
+
+
+Va dans Jenkins → Manage Jenkins → Nodes
+🔹 Tu verras node1 en vert (Connected)
