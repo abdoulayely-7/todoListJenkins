@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker' } // ton agent, qui a docker installé
+    agent { label 'docker' }
 
     environment {
         DOCKERHUB_REPO = 'abdoulayely777/todolist'
@@ -40,10 +40,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Render') {
+            steps {
+                sh '''
+                    curl -X POST "https://api.render.com/deploy/srv-d46cfjripnbc73bm2iqg?key=KwpGMN65XI0"
+                '''
+            }
+        }
+
+
     }
 
     post {
-        success { echo '✅ Build and push succeeded!' }
+        success { echo '✅ Build and push and deploy succeeded!' }
         failure { echo '❌ Build failed.' }
     }
 }
