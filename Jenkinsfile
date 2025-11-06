@@ -43,9 +43,11 @@ pipeline {
 
         stage('Deploy to Render') {
             steps {
-                sh '''
-                    curl -X POST "https://api.render.com/deploy/srv-d46cfjripnbc73bm2iqg?key=KwpGMN65XI0"
-                '''
+                withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK_URL')]) {
+                    sh '''
+                        curl -X POST $RENDER_HOOK_URL
+                    '''
+                }
             }
         }
 
