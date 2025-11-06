@@ -1,0 +1,20 @@
+2️⃣ Ajouter un groupe Docker et mapper l’UID/GID
+
+Plus sécurisé mais un peu plus compliqué :
+
+Vérifie le GID du groupe Docker sur l’hôte :
+
+getent group docker
+
+
+Tu auras quelque chose comme docker:x:999:ton_user. Le 999 est le GID.
+
+Dans l’agent Docker, crée un utilisateur qui appartient à ce groupe :
+
+command: >
+  sh -c "groupadd -g 999 docker && usermod -aG docker jenkins && java -jar /usr/share/jenkins/agent.jar ..."
+
+
+Ça permet d’accéder à Docker sans être root.
+
+💡 Pour démarrer vite et tester, je te conseille la solution 1 : user: root pour l’agent.
