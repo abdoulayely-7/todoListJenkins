@@ -78,15 +78,9 @@
 // deuxieme
 
 pipeline {
-    agent {
-        docker {
-            image 'node:20-alpine'
-            args '-p 3000:3000'
-        }
-    }
+    agent { label 'docker' }  // ⚙️ on dit d'utiliser l'agent qui a accès à Docker
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // ID défini dans Jenkins
         DOCKERHUB_REPO = 'abdoulayely777/todolist'
     }
 
@@ -136,4 +130,3 @@ pipeline {
         }
     }
 }
-
