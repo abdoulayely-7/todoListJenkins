@@ -49,15 +49,15 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Render') {
-        //     steps {
-        //         withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK_URL')]) {
-        //             sh '''
-        //                 curl -X POST $RENDER_HOOK_URL
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Deploy to Render') {
+            steps {
+                withCredentials([string(credentialsId: 'render-deploy-hook', variable: 'RENDER_HOOK_URL')]) {
+                    sh '''
+                        curl -X POST $RENDER_HOOK_URL
+                    '''
+                }
+            }
+        }
 
 
     }
