@@ -6,11 +6,6 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         checkout scm
-        //     }
-        // }
 
         stage('Node Build & Test') {
             agent {
@@ -27,11 +22,11 @@ pipeline {
                     def result = sh(script: 'npm test', returnStatus: true)
 
                     if (result == 0) {
-                        echo "✅ Tous les tests ont réussi !"
+                        echo " Tous les tests ont réussi !"
                     } else if (result == 1) {
-                        error("❌ Certains tests ont échoué. Vérifie le rapport de tests.")
+                        error(" Certains tests ont échoué. Vérifie le rapport de tests.")
                     } else {
-                        error("⚠️ Aucun test trouvé ou erreur inconnue (code ${result}).")
+                        error(" Aucun test trouvé ou erreur inconnue (code ${result}).")
                     }
                 }
             }
@@ -39,6 +34,7 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
+                export DOCKER_BUILDKIT=1
                 sh 'docker build -t $DOCKERHUB_REPO:latest .'
             }
         }
