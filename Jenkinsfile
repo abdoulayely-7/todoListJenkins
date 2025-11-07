@@ -15,7 +15,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "📦 Installation des dépendances..."
+                    echo " Installation des dépendances..."
                     sh 'npm install'
 
                     echo "🧪 Exécution des tests unitaires..."
