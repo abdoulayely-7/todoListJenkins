@@ -18,10 +18,21 @@ pipeline {
                     image 'node:20-alpine'
                 }
             }
-            steps {
-                sh 'npm install'
-                sh 'npm test || echo "No tests found"'
+            script {
+            echo "📦 Installation des dépendances..."
+            sh 'npm install'
+
+            echo "🧪 Exécution des tests unitaires..."
+            def result = sh(script: 'npm test', returnStatus: true)
+
+            if (result == 0) {
+                echo "✅ Tous les tests ont réussi !"
+            } else if (result == 1) {
+                error("❌ Certains tests ont échoué. Vérifie le rapport de tests.")
+            } else {
+                error("⚠️ Aucun test trouvé ou erreur inconnue (code ${result}).")
             }
+        }
         }
 
         stage('Build Docker image') {

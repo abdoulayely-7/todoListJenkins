@@ -29,3 +29,10 @@ INFO: Agent successfully connected and online
 
 Va dans Jenkins → Manage Jenkins → Nodes
 🔹 Tu verras node1 en vert (Connected)
+
+hostname -I
+ip a
+
+sudo snap install ngrok
+
+ngrok http 8181
