@@ -18,6 +18,7 @@ pipeline {
                     echo " Installation des dépendances..."
                     sh 'npm install'
 
+
                     echo "🧪 Exécution des tests unitaires..."
                     def result = sh(script: 'npm test', returnStatus: true)
 
