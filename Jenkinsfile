@@ -34,8 +34,10 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
-                export DOCKER_BUILDKIT=1
-                sh 'docker build -t $DOCKERHUB_REPO:latest .'
+                sh '''
+                    export DOCKER_BUILDKIT=1
+                    docker build -t myapp:latest .
+                '''
             }
         }
 
