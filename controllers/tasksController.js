@@ -21,7 +21,7 @@ export const updateTask = (req, res) => {
     tasks[index] = { id, ...req.body };
     res.json(tasks[index]);
   } else {
-    res.status(404).send('Task not found');
+    res.status(404).send('Task not trouver');
   }
 };
 
