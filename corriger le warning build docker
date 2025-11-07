@@ -1,0 +1,7 @@
+Si tu veux le message proprement supprimé :
+
+Va dans Jenkins → Manage Jenkins → Configure System
+
+Dans la section “Global properties” → “Environment variables”, ajoute :
+
+DOCKER_BUILDKIT=1
