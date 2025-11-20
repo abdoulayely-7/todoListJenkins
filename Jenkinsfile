@@ -64,7 +64,7 @@ pipeline {
     }
 
     post {
-        success { echo '✅ Build and push and deploy succeeded!' }
-        failure { echo '❌ Build failed.' }
+        success { echo ' Build and push and deploy succeeded!' }
+        failure { echo ' Build failed.' }
     }
 }

@@ -56,6 +56,8 @@ docker network ls
 docker network rm jenkins
 
 
+sudo rm -rf ./jenkins_home
+
 
 agent:
     image: jenkins/inbound-agent:latest
@@ -67,6 +69,25 @@ agent:
       - JENKINS_URL=http://jenkins:8080        # ⚠️ Le master est joignable par son nom de service (pas besoin d'IP)
       - JENKINS_AGENT_NAME=node1
       - JENKINS_SECRET=efae51eec32aa467cb41b2891af5ac6b54c634bd5b0e73bf99726dfdbee95c0e  # ⚠️ À remplacer par ton secret réel
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - jenkins
+    restart: unless-stopped
+
+
+
+    agent:
+    image: jenkins/inbound-agent:latest
+    container_name: jenkins-agent-node
+    user: root
+    depends_on:
+      - jenkins
+    environment:
+      - JENKINS_URL=http://jenkins:8080        
+      - JENKINS_AGENT_NAME=thierno
+      - JENKINS_SECRET=ea43ab304c9f5b0da8760751e9e870b963e5cce496d4d84d747d7c4741db229f  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
